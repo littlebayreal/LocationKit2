@@ -7,7 +7,15 @@
 //import android.widget.Button;
 //import android.widget.ImageView;
 //
+//import com.bumptech.glide.Glide;
+//import com.bumptech.glide.load.engine.DiskCacheStrategy;
+//import com.sziti.locationkit2.R;
+//
 //import java.util.List;
+//
+//import it.liuting.imagetrans.ImageTrans;
+//import it.liuting.imagetrans.ScaleType;
+//import it.liuting.imagetrans.listener.SourceImageViewGet;
 //
 //public class SelectImageAdatper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //    //最多选择多少张
@@ -77,7 +85,7 @@
 //                                        return null;
 //                                    }
 //                                })
-//                                .setScaleType(ImageView.ScaleType.CENTER_CROP)
+//                                .setScaleType(ScaleType.CENTER_CROP)
 //                                .setImageLoad(new MyImageLoad())
 //                                .setNowIndex(position)
 //                                .show();
