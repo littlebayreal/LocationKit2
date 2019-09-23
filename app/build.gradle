@@ -40,4 +40,7 @@ dependencies {
 	compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
 	compile 'com.github.bumptech.glide:glide:3.7.0'
 	compile project(':imagetrans')
+	compile ('com.lzy.widget:imagepicker:0.5.5'){
+		exclude  group:'com.android.support'
+	}
 }
