@@ -2,6 +2,7 @@ package com.sziti.locationkit2.treeRecycleView;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import com.sziti.locationkit2.treeRecycleView.base.*;
 
@@ -126,15 +127,6 @@ public class TreeRecyclerAdapter extends BaseRecyclerAdapter<TreeItem> {
         return getDatas().get(position).getLayoutId();
     }
 
-    //绑定视图数据
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        TreeItem t = getDatas().get(position);
-        //为每个item绑定manager 控制adapter
-        checkItemManage(t);
-        t.onBindViewHolder(holder);
-    }
-
     private void checkItemManage(TreeItem item) {
         if (item.getItemManager() == null) {
             item.setItemManager(getItemManager());
@@ -142,8 +134,11 @@ public class TreeRecyclerAdapter extends BaseRecyclerAdapter<TreeItem> {
     }
 
     @Override
-    public final void onBindViewHolder(ViewHolder holder, TreeItem item, int position) {
-
+    public void onBindViewHolder(ViewHolder holder, TreeItem item, int position) {
+//		TreeItem t = getDatas().get(position);
+		//为每个item绑定manager 控制adapter
+		checkItemManage(item);
+		item.onBindViewHolder(holder);
     }
 
     @Override

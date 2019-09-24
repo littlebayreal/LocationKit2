@@ -25,7 +25,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<ViewHo
         return holder;
     }
 
-
+    //绑定视图数据
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         onBindViewHolder(holder, getDatas().get(position), position);

@@ -7,7 +7,7 @@
 	tools:context=".MainActivity">
 
 	<LinearLayout
-		android:layout_width="300dp"
+		android:layout_width="450dp"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
 		android:padding="10dp">
@@ -25,14 +25,15 @@
 
 			<TextView
 				android:id="@+id/tv_name"
-				android:layout_width="100dp"
+				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
+				android:layout_weight="1"
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
 				android:text="胥江路" />
 			<TextView
-				android:layout_width="match_parent"
+				android:layout_width="100dp"
 				android:layout_height="match_parent"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
@@ -54,12 +55,18 @@
 
 			<TextView
 				android:id="@+id/tv_location"
-				android:layout_width="100dp"
+				android:layout_width="wrap_content"
+				android:layout_weight="1"
 				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
 				android:text="东" />
+			<TextView
+				android:layout_width="100dp"
+				android:layout_height="match_parent"
+				android:gravity="center"
+				android:layout_marginLeft="10dp" />
 		</LinearLayout>
 
 		<LinearLayout
@@ -76,7 +83,8 @@
 
 			<TextView
 				android:id="@+id/tv_longitude"
-				android:layout_width="100dp"
+				android:layout_width="wrap_content"
+				android:layout_weight="1"
 				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
@@ -85,7 +93,7 @@
 
 			<TextView
 				android:id="@+id/tv_auto_location"
-				android:layout_width="match_parent"
+				android:layout_width="100dp"
 				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
@@ -107,12 +115,18 @@
 
 			<TextView
 				android:id="@+id/tv_latitude"
-				android:layout_width="100dp"
+				android:layout_width="wrap_content"
+				android:layout_weight="1"
 				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
 				android:text="胥江路" />
+			<TextView
+				android:layout_width="100dp"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="10dp"
+				android:gravity="center" />
 		</LinearLayout>
 
 		<android.support.v7.widget.RecyclerView
@@ -126,11 +140,10 @@
 			android:layout_height="40dp"
 			android:layout_gravity="center"
 			android:text="保存" />
-
+        <include layout="@layout/item_history_header"/>
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/showHistory"
 			android:layout_width="match_parent"
-			android:layout_marginTop="10dp"
 			android:layout_height="wrap_content" />
 	</LinearLayout>
 </LinearLayout>
