@@ -1,13 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:orientation="vertical">
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="4dp"
+	android:gravity="center_horizontal"
+	android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/item_image_show_img"
-        android:layout_width="80dp"
-        android:scaleType="fitXY"
-        android:layout_height="80dp" />
+	<TextView
+		android:id="@+id/item_name"
+		android:layout_width="120dp"
+		android:layout_height="match_parent"
+		android:padding="5dp"
+		android:text="胥江路胥江路胥江路东"
+		android:gravity="center"
+		android:textSize="12dp"/>
+	<TextView
+		android:id="@+id/item_longitude"
+		android:layout_width="80dp"
+		android:layout_height="40dp"
+		android:padding="5dp"
+		android:text="1212121212"
+		android:gravity="center"
+		android:textSize="12dp"/>
+
+	<TextView
+		android:id="@+id/item_latitude"
+		android:layout_width="80dp"
+		android:layout_height="40dp"
+		android:padding="5dp"
+		android:text="121212121"
+		android:gravity="center"
+		android:textSize="12dp"/>
+
+	<TextView
+		android:id="@+id/item_time"
+		android:layout_width="70dp"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:padding="5dp"
+		android:text="12121212121212121"
+		android:textSize="10dp" />
+
+	<Button
+		android:id="@+id/item_delete"
+		android:layout_width="50dp"
+		android:layout_height="40dp"
+		android:padding="5dp"
+		android:text="删除"/>
 </LinearLayout>

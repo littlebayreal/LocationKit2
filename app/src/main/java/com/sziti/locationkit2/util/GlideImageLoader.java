@@ -22,7 +22,19 @@ public class GlideImageLoader implements ImageLoader {
                 .into(imageView);
     }
 
-    public static void displayImage(Activity activity, String path, ImageView imageView) {
+	@Override
+	public void displayImagePreview(Activity activity, String path, ImageView imageView, int width, int height) {
+		Glide.with(activity)
+				.load(path)
+				.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+				.override(width, height)
+				.error(R.mipmap.default_image)
+				.placeholder(R.mipmap.default_image)
+				.thumbnail(1f)
+				.into(imageView);
+	}
+
+	public static void displayImage(Activity activity, String path, ImageView imageView) {
         Glide.with(activity)
                 .load(path)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
