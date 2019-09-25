@@ -2,12 +2,14 @@ package com.sziti.locationkit2
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import com.amap.api.maps.MapView
 import com.lzy.imagepicker.ImagePicker
 import com.lzy.imagepicker.bean.ImageItem
 import com.lzy.imagepicker.ui.ImageGridActivity
@@ -31,9 +33,15 @@ class MainActivity : AppCompatActivity() {
 	lateinit var showImageAdapter:SelectImageAdatper
 	var showHistoryAdapter:TreeRecyclerAdapter = TreeRecyclerAdapter()
 	var imgList:ArrayList<String> = ArrayList()
+	lateinit var mMapView:MapView
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
+		//获取地图控件引用
+		mMapView = findViewById(R.id.map)
+		//在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
+		mMapView.onCreate(savedInstanceState)
+
 		initView()
 		initData()
 		initListener()
@@ -90,6 +98,26 @@ class MainActivity : AppCompatActivity() {
 		showHistory = findViewById(R.id.showHistory)
 	}
 
+	override fun onDestroy() {
+		super.onDestroy()
+		mMapView.onDestroy()
+	}
+
+	override fun onResume() {
+		super.onResume()
+		mMapView.onResume()
+	}
+
+	override fun onPause() {
+		super.onPause()
+		mMapView.onPause()
+	}
+
+	override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+		super.onSaveInstanceState(outState, outPersistentState)
+		//在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
+		mMapView.onSaveInstanceState(outState)
+	}
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		Log.i("zxb","code:"+ resultCode)
