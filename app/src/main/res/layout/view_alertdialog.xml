@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/lLayout_bg"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/alert_bg"
+	android:orientation="vertical">
+	<TextView
+		android:id="@+id/txt_title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10dp"
+		android:layout_marginTop="8dp"
+		android:layout_marginRight="10dp"
+		android:gravity="center"
+		android:text="请选择站点"
+		android:textColor="@color/black"
+		android:textSize="18sp"
+		android:textStyle="bold" />
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginTop="2dp"
+		android:background="@color/alertdialog_line" />
+	<RelativeLayout
+		android:id="@+id/alert_dialog_relativeLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/alert_dialog_recyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="#fff" />
+
+		<TextView
+			android:id="@+id/alert_dialog_index"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_centerInParent="true"
+			android:background="#66000000"
+			android:gravity="center"
+			android:textColor="#fff"
+			android:visibility="gone" />
+
+		<com.sziti.locationkit2.widget.IndexBar
+			android:id="@+id/alert_dialog_indexBar"
+			android:layout_width="40dp"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true" />
+	</RelativeLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/btn_neg"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:background="@drawable/alertdialog_left_selector"
+			android:gravity="center"
+			android:text="取消"
+			android:textColor="@color/actionsheet_blue"
+			android:textSize="16dp" />
+
+		<ImageView
+			android:id="@+id/img_line"
+			android:layout_width="0.5dp"
+			android:layout_height="40dp"
+			android:background="@color/alertdialog_line" />
+		<Button
+			android:id="@+id/btn_pos"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_weight="1"
+			android:background="@drawable/alertdialog_right_selector"
+			android:gravity="center"
+			android:text="确定"
+			android:textColor="@color/actionsheet_blue"
+			android:textSize="16dp"
+			android:textStyle="bold" />
+	</LinearLayout>
+</LinearLayout>
