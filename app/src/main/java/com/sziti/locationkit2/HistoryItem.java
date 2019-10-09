@@ -1,7 +1,8 @@
 package com.sziti.locationkit2;
 
-import android.util.Log;
 import android.widget.TextView;
+
+import com.sziti.locationkit2.data.HistoryData;
 import com.sziti.locationkit2.treeRecycleView.base.TreeItem;
 import com.sziti.locationkit2.treeRecycleView.base.ViewHolder;
 

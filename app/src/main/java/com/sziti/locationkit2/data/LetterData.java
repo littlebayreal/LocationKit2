@@ -1,4 +1,4 @@
-package com.sziti.locationkit2;
+package com.sziti.locationkit2.data;
 
 
 import com.sziti.locationkit2.treeRecycleView.base.BaseItemData;

@@ -1,4 +1,4 @@
-package com.sziti.locationkit2
+package com.sziti.locationkit2.data
 
 /**
  * 历史定位数据bean类

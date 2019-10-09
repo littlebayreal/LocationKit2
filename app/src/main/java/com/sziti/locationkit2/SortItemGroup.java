@@ -1,5 +1,6 @@
 package com.sziti.locationkit2;
 
+import com.sziti.locationkit2.data.LetterData;
 import com.sziti.locationkit2.treeRecycleView.base.ItemHelperFactory;
 import com.sziti.locationkit2.treeRecycleView.base.TreeItem;
 import com.sziti.locationkit2.treeRecycleView.base.TreeItemGroup;

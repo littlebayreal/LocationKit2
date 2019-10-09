@@ -2,11 +2,8 @@ package com.sziti.locationkit2
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.os.PersistableBundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -26,6 +23,8 @@ import com.lzy.imagepicker.ui.ImageGridActivity
 import com.sziti.locationkit2.GlobalObjects.Companion.IMAGE_PICKER
 import com.sziti.locationkit2.GlobalObjects.Companion.LETTERS
 import com.sziti.locationkit2.Pullableview.PullToRefreshLayout
+import com.sziti.locationkit2.data.HistoryData
+import com.sziti.locationkit2.data.LetterData
 import com.sziti.locationkit2.treeRecycleView.SelectImageAdatper
 import com.sziti.locationkit2.treeRecycleView.TreeRecyclerAdapter
 import com.sziti.locationkit2.treeRecycleView.base.ItemHelperFactory
@@ -72,9 +71,6 @@ class MainActivity : AppCompatActivity() {
 		mMapView = findViewById(R.id.map)
 		//在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
 		mMapView.onCreate(savedInstanceState)
-
-//		//初始化定位
-//		mLocationClient = AMapLocationClient(getApplicationContext())
 
 		initView()
 		initMapView()
@@ -200,7 +196,6 @@ class MainActivity : AppCompatActivity() {
 
 			var treeItemList =
 				ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null)
-			Log.i("zxb", "treeItemList:" + treeItemList.size)
 			t.setDatas(treeItemList)
 			t.notifyDataSetChanged()
 		})
@@ -225,7 +220,12 @@ class MainActivity : AppCompatActivity() {
 
 		for (i in 0..5) {
 			var historyData: HistoryData =
-				HistoryData(1, "120.121212", "31.121211", "2019/9/24 17:21")
+				HistoryData(
+					1,
+					"120.121212",
+					"31.121211",
+					"2019/9/24 17:21"
+				)
 			historylist.add(historyData)
 		}
 		var list =
@@ -309,13 +309,11 @@ class MainActivity : AppCompatActivity() {
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		Log.i("zxb", "code:" + resultCode)
 		if (resultCode === ImagePicker.RESULT_CODE_ITEMS) {
 			if (data != null && requestCode === IMAGE_PICKER) {
 				val images =
 					data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS) as ArrayList<ImageItem>
 				for (i in images.indices) {
-					Log.d("zxb", "path:" + images[i].path)
 					imgList.add(images[i].path)
 				}
 				showImageAdapter.refresh(imgList)
