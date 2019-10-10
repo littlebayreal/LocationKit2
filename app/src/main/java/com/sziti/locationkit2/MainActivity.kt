@@ -34,6 +34,7 @@ import com.sziti.locationkit2.util.PinYinUtil
 import com.sziti.locationkit2.util.TransformLocation
 import com.sziti.locationkit2.widget.AlertDialog
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Retrofit
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 
@@ -200,11 +201,14 @@ class MainActivity : AppCompatActivity() {
 			t.notifyDataSetChanged()
 		})
 		tv_auto_location.setOnClickListener(View.OnClickListener {
-			Log.e(
-				"zxb", PinYinUtil.getFirstLetter(
-					"胥江路".substring(0, 1).toCharArray()[0]
-				).toString()
-			)
+//			Log.e(
+//				"zxb", PinYinUtil.getFirstLetter(
+//					"胥江路".substring(0, 1).toCharArray()[0]
+//				).toString()
+//			)
+		})
+		button_save.setOnClickListener(View.OnClickListener {
+
 		})
 	}
 

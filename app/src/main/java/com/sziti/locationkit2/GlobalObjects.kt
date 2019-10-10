@@ -2,6 +2,7 @@ package com.sziti.locationkit2
 
 class GlobalObjects {
 	companion object {
+		val base_url = ""
 		val IMAGE_PICKER = 1111
 		val LETTERS = arrayOf(
 			"A",
