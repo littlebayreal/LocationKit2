@@ -5,7 +5,7 @@ import android.view.View
 /**
  * 历史定位数据bean类
  */
-class HistoryData constructor(type:Int,longitude:String,latitude:String,time:String,onClick:OnDeleteClickListener) {
+class HistoryData constructor(type:Int,longitude:String,latitude:String,time:String,f:QueryPositionRecordResult.QueryPositionRecord,onClick:OnDeleteClickListener) {
 	/**
 	 * 定义数据类型  0为头部布局 1为内容布局
 	 */
@@ -28,12 +28,15 @@ class HistoryData constructor(type:Int,longitude:String,latitude:String,time:Str
 			return field
 		}
 	var onClick:OnDeleteClickListener
+
+	lateinit var resData:QueryPositionRecordResult.QueryPositionRecord
 	init {
 		this.type = type
 		this.longitude = longitude
 		this.latitude = latitude
 		this.time = time
 		this.onClick = onClick
+		this.resData = f
 	}
 	interface OnDeleteClickListener{
 		fun onDelete(position:Int)

@@ -9,7 +9,7 @@ public class LetterData extends BaseItemData {
     //首字母
     private String letter;
     //字母下的子数据
-    private List<String> datas;
+    private List<BDSiteInfoData.ModelData> datas;
 
     public String getLetter() {
         return letter;
@@ -19,11 +19,11 @@ public class LetterData extends BaseItemData {
         this.letter = letter;
     }
 
-	public List<String> getDatas() {
+	public List<BDSiteInfoData.ModelData> getDatas() {
 		return datas;
 	}
 
-	public void setDatas(List<String> datas) {
+	public void setDatas(List<BDSiteInfoData.ModelData> datas) {
 		this.datas = datas;
 	}
 }

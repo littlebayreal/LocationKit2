@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SelectImageAdatper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //最多选择多少张
-    private int MAX_SELECT = 5;
+    private int MAX_SELECT = 1;
     private static final int TYPE_ADD = 0;
     private static final int TYPE_PICTURE = 1;
     private List<String> list;

@@ -13,11 +13,13 @@
 		android:padding="5dp"
 		android:text="胥江路胥江路胥江路东"
 		android:gravity="center"
-		android:textSize="12dp"/>
+		android:textSize="12dp"
+		android:visibility="gone"/>
 	<TextView
 		android:id="@+id/item_longitude"
-		android:layout_width="80dp"
+		android:layout_width="0dp"
 		android:layout_height="40dp"
+		android:layout_weight="1"
 		android:padding="5dp"
 		android:text="1212121212"
 		android:gravity="center"
@@ -25,7 +27,8 @@
 
 	<TextView
 		android:id="@+id/item_latitude"
-		android:layout_width="80dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
 		android:layout_height="40dp"
 		android:padding="5dp"
 		android:text="121212121"
@@ -34,7 +37,8 @@
 
 	<TextView
 		android:id="@+id/item_time"
-		android:layout_width="70dp"
+		android:layout_width="00dp"
+		android:layout_weight="1"
 		android:layout_height="match_parent"
 		android:gravity="center"
 		android:padding="5dp"

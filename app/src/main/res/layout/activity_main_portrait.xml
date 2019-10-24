@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
-
 	<com.amap.api.maps.MapView
 		android:id="@+id/map"
 		android:layout_width="match_parent"
@@ -19,13 +17,11 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal">
-
 			<TextView
 				android:layout_width="100dp"
 				android:layout_height="wrap_content"
 				android:text="站点名称"
 				android:textSize="20sp" />
-
 			<EditText
 				android:id="@+id/tv_name"
 				android:layout_width="wrap_content"
@@ -35,7 +31,6 @@
 				android:background="@drawable/show_bg"
 				android:gravity="center"
 				android:text="胥江路" />
-
 			<TextView
 				android:id="@+id/select_stop"
 				android:layout_width="100dp"
@@ -56,7 +51,6 @@
 				android:layout_height="wrap_content"
 				android:text="站点方位"
 				android:textSize="20sp" />
-
 			<EditText
 				android:id="@+id/tv_location_direction"
 				android:layout_width="wrap_content"
@@ -66,6 +60,8 @@
 				android:background="@drawable/show_bg"
 				android:gravity="center"
 				android:text="东" />
+
+
 
 			<TextView
 				android:layout_width="100dp"
@@ -103,6 +99,7 @@
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
+				android:visibility="invisible"
 				android:text="定位" />
 		</LinearLayout>
 
@@ -134,16 +131,18 @@
 				android:layout_marginLeft="10dp"
 				android:gravity="center" />
 		</LinearLayout>
-		<Button
-			android:layout_width="wrap_content"
-			android:layout_height="40dp"
-			android:layout_gravity="center"
-			android:text="保存" />
+
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/showImages"
 			android:layout_width="match_parent"
 			android:layout_height="100dp"
 			android:layout_marginTop="10dp" />
+		<Button
+			android:id="@+id/button_save"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_gravity="center"
+			android:text="保存" />
 		<include layout="@layout/item_history_header" />
 		<com.sziti.locationkit2.Pullableview.PullToRefreshLayout
 			android:id="@+id/pull_to_refresh_layout"
@@ -151,7 +150,7 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1">
 			<include layout="@layout/refresh_head" />
-			<include layout="@layout/refresh_head_show"/>
+			<include layout="@layout/refresh_head_show" />
 			<com.sziti.locationkit2.Pullableview.PullableRecyclerView
 				android:id="@+id/showHistory"
 				android:layout_width="match_parent"

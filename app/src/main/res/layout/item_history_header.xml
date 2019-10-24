@@ -10,24 +10,28 @@
 		android:layout_height="match_parent"
 		android:padding="5dp"
 		android:text="站点名称"
-		android:gravity="center" />
+		android:gravity="center"
+		android:visibility="gone"/>
 	<TextView
 		android:id="@+id/item_history_header_longitude"
-		android:layout_width="80dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
 		android:layout_height="30dp"
 		android:gravity="center"
 		android:text="经度"/>
 
 	<TextView
 		android:id="@+id/item_history_header_latitude"
-		android:layout_width="80dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
 		android:layout_height="30dp"
 		android:gravity="center"
 		android:text="纬度" />
 
 	<TextView
 		android:id="@+id/item_history_header_time"
-		android:layout_width="70dp"
+		android:layout_width="0dp"
+		android:layout_weight="1"
 		android:layout_height="30dp"
 		android:gravity="center"
 		android:text="测量时间" />

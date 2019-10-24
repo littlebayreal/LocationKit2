@@ -21,9 +21,9 @@ class HttpInterceptor:Interceptor{
 		val response = chain?.proceed(request)
 		val costTime =
 			(response!!.receivedResponseAtMillis() - response!!.sentRequestAtMillis()) / 1000.0f
-//        response.body();
-//        Log.i(TAG, "response body:"+ response.body().contentLength());
-//        Log.d(TAG,"request bodyLength:"+ request.body().contentLength());
+        response.body()
+        Log.i(TAG, "response body:"+ response.body().contentLength())
+        Log.d(TAG,"request bodyLength:"+ request?.body()?.contentLength())
 		Log.i(TAG, "response.code:" + response.code())
 		Log.i(
 			TAG,
@@ -39,6 +39,10 @@ class HttpInterceptor:Interceptor{
 		Log.i(TAG, "          Request Headers          ")
 		Log.i(TAG, "-----------------------------------")
 		Log.i(TAG, String.format("%s", request?.headers()))
+		Log.i(TAG, "-----------------------------------")
+		Log.i(TAG, "          Request Body          ")
+		Log.i(TAG, String.format("%s", request?.body()))
+		Log.i(TAG, "-----------------------------------")
 		Log.i(TAG, "-----------------------------------")
 		Log.i(TAG, "          Response Headers          ")
 		Log.i(TAG, "-----------------------------------")

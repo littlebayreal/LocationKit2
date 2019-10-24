@@ -99,6 +99,7 @@
 				android:layout_marginLeft="10dp"
 				android:background="@drawable/show_bg"
 				android:gravity="center"
+				android:visibility="invisible"
 				android:text="定位" />
 		</LinearLayout>
 
@@ -130,17 +131,19 @@
 				android:layout_marginLeft="10dp"
 				android:gravity="center" />
 		</LinearLayout>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/showImages"
+			android:layout_width="match_parent"
+			android:layout_height="100dp"
+			android:layout_marginTop="10dp" />
+
 		<Button
 			android:id="@+id/button_save"
 			android:layout_width="wrap_content"
 			android:layout_height="40dp"
 			android:layout_gravity="center"
 			android:text="保存" />
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/showImages"
-			android:layout_width="match_parent"
-			android:layout_height="100dp"
-			android:layout_marginTop="10dp" />
 		<include layout="@layout/item_history_header" />
 		<com.sziti.locationkit2.Pullableview.PullToRefreshLayout
 			android:id="@+id/pull_to_refresh_layout"

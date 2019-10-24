@@ -18,7 +18,7 @@ class LocationKitApplication : Application() {
 			imagePicker.isShowCamera = true  //显示拍照按钮
 			imagePicker.isCrop = false        //允许裁剪（单选才有效）
 			imagePicker.isSaveRectangle = true //是否按矩形区域保存
-			imagePicker.selectLimit = 3   //选中数量限制
+			imagePicker.selectLimit = 1   //选中数量限制
 			imagePicker.style = CropImageView.Style.RECTANGLE  //裁剪框的形状
 			imagePicker.focusWidth = 800   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
 			imagePicker.focusHeight = 800  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
