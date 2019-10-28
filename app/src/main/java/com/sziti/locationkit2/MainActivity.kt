@@ -156,10 +156,10 @@ class MainActivity : AppCompatActivity() {
 		}
 		select_stop.setOnClickListener(View.OnClickListener {
 			//网络请求
-			RetrofitClient.getInstance().getBDSiteInfoList(false, 1, 10)
+			RetrofitClient.getInstance().getBDSiteInfoList("False", 1, 80)
 				.subscribeOn(Schedulers.io())
-				.map(object : Func1<BDSiteInfoData, List<LetterData>> {
-					override fun call(t: BDSiteInfoData?): List<LetterData> {
+				.map(object : Func1<BDSiteInfoData, List<SortItemGroup>> {
+					override fun call(t: BDSiteInfoData?): List<SortItemGroup> {
 						var temp: ArrayList<LetterData> = ArrayList()
 						if (t!!.Total > 0 && t!!.Model!!.size > 0) {
 							//初始化26个字母的数据
@@ -185,65 +185,71 @@ class MainActivity : AppCompatActivity() {
 								if (letterData.datas.size > 0)
 									temp.add(letterData)
 							}
-							return temp
+							return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
 						}
-						return temp
+						return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
 					}
 				})
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(Action1 {
-					var t = TreeRecyclerAdapter(TreeRecyclerType.SHOW_ALL)
-					//点击弹出站点选择dialog
-					var dialog = AlertDialog(this@MainActivity)
-					dialog.builder().setTitle("选择站点名称")
-						.setCancelable(false)
-						.setMsgLayoutManager(
-							LinearLayoutManager(
-								this@MainActivity,
-								LinearLayoutManager.VERTICAL,
-								false
+				.subscribe(object:Subscriber<List<SortItemGroup>>(){
+					override fun onNext(it: List<SortItemGroup>?) {
+						var t = TreeRecyclerAdapter(TreeRecyclerType.SHOW_ALL)
+						//点击弹出站点选择dialog
+						var dialog = AlertDialog(this@MainActivity)
+						dialog.builder().setTitle("选择站点名称")
+							.setCancelable(false)
+							.setMsgLayoutManager(
+								LinearLayoutManager(
+									this@MainActivity,
+									LinearLayoutManager.VERTICAL,
+									false
+								)
 							)
-						)
-						.setMsgAdapter(t)
-						.setPositiveButton("", View.OnClickListener {
+							.setMsgAdapter(t)
+							.setPositiveButton("", View.OnClickListener {
 
-						})
-						.setNegativeButton("取消", View.OnClickListener {
+							})
+							.setNegativeButton("取消", View.OnClickListener {
 
-						})
-						.setOnIndexChangedListener {
-							var sortIndex = 0
-							for (t in t.getDatas()) {
-								if (t is TreeItemGroup) {
-									if ((t.getData() as LetterData).getLetter().equals(it)) {
-										sortIndex = t.getItemManager().getItemPosition(t)
+							})
+							.setOnIndexChangedListener {
+								//根据滑动的索引快速定位
+								var sortIndex = 0
+								for (t in t.getDatas()) {
+									if (t is TreeItemGroup) {
+										if ((t.getData() as LetterData).getLetter().equals(it)) {
+											sortIndex = t.getItemManager().getItemPosition(t)
+										}
 									}
 								}
+								(dialog.txt_msg.layoutManager as LinearLayoutManager)?.scrollToPositionWithOffset(
+									sortIndex,
+									0
+								)
 							}
-							(dialog.txt_msg.layoutManager as LinearLayoutManager)?.scrollToPositionWithOffset(
-								sortIndex,
-								0
-							)
-						}
-					dialog.show()
-					var treeItemList =
-						ItemHelperFactory.createTreeItemList(it, SortItemGroup::class.java, null)
-					t.setDatas(treeItemList)
-					t.notifyDataSetChanged()
-					t.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-						override fun onItemClick(viewHolder: ViewHolder?, position: Int) {
-							if (viewHolder?.getView<TextView>(R.id.item_sort_child_tv) != null) {
-								currentStop =
-									viewHolder.getView<TextView>(R.id.item_sort_child_tv)?.getTag() as BDSiteInfoData.ModelData
-//							if (treeItemList.get(position) is SortItem) {
-//								currentStop = treeItemList.get(position).data as BDSiteInfoData.ModelData
-								tv_name?.setText(currentStop?.SName)
-								tv_location_direction?.setText(currentStop?.SDirect)
-								dialog.dismiss()
-//							}
+						dialog.show()
+						t.setDatas(it)
+						t.notifyDataSetChanged()
+						t.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+							override fun onItemClick(viewHolder: ViewHolder?, position: Int) {
+								if (viewHolder?.getView<TextView>(R.id.item_sort_child_tv) != null) {
+									currentStop =
+										viewHolder.getView<TextView>(R.id.item_sort_child_tv)?.getTag() as BDSiteInfoData.ModelData
+									tv_name?.setText(currentStop?.SName)
+									tv_location_direction?.setText(currentStop?.SDirect)
+									dialog.dismiss()
+								}
 							}
-						}
-					})
+						})
+					}
+
+					override fun onCompleted() {
+
+					}
+
+					override fun onError(e: Throwable?) {
+						Log.e("vvv",e?.toString())
+					}
 				})
 		})
 

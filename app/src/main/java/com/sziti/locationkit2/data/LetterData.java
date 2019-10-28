@@ -26,4 +26,12 @@ public class LetterData extends BaseItemData {
 	public void setDatas(List<BDSiteInfoData.ModelData> datas) {
 		this.datas = datas;
 	}
+
+	@Override
+	public String toString() {
+		return "LetterData{" +
+			"letter='" + letter + '\'' +
+			", datas=" + datas +
+			'}';
+	}
 }

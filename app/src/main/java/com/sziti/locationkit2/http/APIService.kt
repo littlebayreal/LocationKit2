@@ -22,7 +22,6 @@ interface APIService {
 	fun saveSitePosition(
 		@Field("PositionID") PositionID:String,@Field("SiteID") SiteID:String, @Field("Latitude")Latitude:Double, @Field("Longitude")Longitude:Double,
 		@Field("SitePhotos")SitePhotos:String,@Field("RequestedBy") RequestedBy:String):Observable<CommonResult>
-
 	/**
 	 * 获取站点列表
 	 */
@@ -30,7 +29,7 @@ interface APIService {
 	@FormUrlEncoded
 	@Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
 	fun getBDSiteInfoList(
-		@Field("IsPage") IsPage:Boolean,@Field("CurrentPage") CurrentPage:Int, @Field("PageSize")PageSize:Int):Observable<BDSiteInfoData>
+		@Field("IsPage") IsPage:String,@Field("CurrentPage") CurrentPage:Int, @Field("PageSize")PageSize:Int):Observable<BDSiteInfoData>
 	/**
 	 * 查询历史点位
 	 */
