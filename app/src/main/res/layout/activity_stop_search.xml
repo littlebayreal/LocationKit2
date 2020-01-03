@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<SearchView
+		android:id="@+id/search_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:iconifiedByDefault="false"
+		android:queryHint="请输入站点名称" />
+
+	<com.example.easyrefreshloadview.base.EasyRefreshLoadView
+		android:id="@+id/pull_to_refresh_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+<!--		<include layout="@layout/refresh_head" />-->
+<!--		<include layout="@layout/refresh_head_show" />-->
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/activity_stop_search_rv"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+<!--		<include layout="@layout/load_more" />-->
+	</com.example.easyrefreshloadview.base.EasyRefreshLoadView>
+
+</LinearLayout>

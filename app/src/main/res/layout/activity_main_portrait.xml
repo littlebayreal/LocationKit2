@@ -29,8 +29,7 @@
 				android:layout_marginLeft="10dp"
 				android:layout_weight="1"
 				android:background="@drawable/show_bg"
-				android:gravity="center"
-				android:text="胥江路" />
+				android:gravity="center" />
 			<TextView
 				android:id="@+id/select_stop"
 				android:layout_width="100dp"
@@ -58,8 +57,7 @@
 				android:layout_marginLeft="10dp"
 				android:layout_weight="1"
 				android:background="@drawable/show_bg"
-				android:gravity="center"
-				android:text="东" />
+				android:gravity="center" />
 
 
 
@@ -144,18 +142,16 @@
 			android:layout_gravity="center"
 			android:text="保存" />
 		<include layout="@layout/item_history_header" />
-		<com.sziti.locationkit2.Pullableview.PullToRefreshLayout
-			android:id="@+id/pull_to_refresh_layout"
+	</LinearLayout>
+		<com.example.easyrefreshloadview.base.EasyRefreshLoadView
+			android:id="@+id/pull_to_refresh_layout_portrait"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1">
-			<include layout="@layout/refresh_head" />
-			<include layout="@layout/refresh_head_show" />
-			<com.sziti.locationkit2.Pullableview.PullableRecyclerView
+			android:layout_height="match_parent">
+			<android.support.v7.widget.RecyclerView
 				android:id="@+id/showHistory"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-			<include layout="@layout/load_more" />
-		</com.sziti.locationkit2.Pullableview.PullToRefreshLayout>
-	</LinearLayout>
+				android:layout_height="match_parent"
+				android:padding="10dp"/>
+		</com.example.easyrefreshloadview.base.EasyRefreshLoadView>
+
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.sziti.locationkit2.data
 
- class LoginData {
+class LoginData {
 //	{
 //		"Guid": "5b1d03e3-4875-4f80-93e0-08b685c8b108",
 //		"LoginName": "SuperAdmin",
@@ -33,9 +33,13 @@ package com.sziti.locationkit2.data
 
 	//	ErrorCode:3 密码错
 //	ErrorCode:2 账户不存在
+	var LoginName = ""
+	var RealName = ""
+	var CompanyId = ""
+	var Name = ""
 	var ErrorCode = 0
 
-	var RoleList:List<RoleListData> ?=null
+	var RoleList: List<RoleListData>? = null
 
 	class RoleListData {
 		var RoleName: String? = null
@@ -44,6 +48,5 @@ package com.sziti.locationkit2.data
 		override fun toString(): String {
 			return "RoleListData(RoleName='$RoleName', RoleID='$RoleID')"
 		}
-
 	}
 }

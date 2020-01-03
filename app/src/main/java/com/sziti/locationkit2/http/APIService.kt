@@ -17,11 +17,14 @@ interface APIService {
 	 * 上传点位数据
 	 */
 	@POST("Mobile/SaveSitePosition")
-	@FormUrlEncoded
-	@Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
-	fun saveSitePosition(
-		@Field("PositionID") PositionID:String,@Field("SiteID") SiteID:String, @Field("Latitude")Latitude:Double, @Field("Longitude")Longitude:Double,
-		@Field("SitePhotos")SitePhotos:String,@Field("RequestedBy") RequestedBy:String):Observable<CommonResult>
+//	@FormUrlEncoded
+//	@Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
+//	fun saveSitePosition(
+//		@Field("PositionID") PositionID:String,@Field("SiteID") SiteID:String, @Field("SiteName") siteName:String ,@Field("SiteDirection") siteDirection:String,
+//		@Field("Latitude")Latitude:Double, @Field("Longitude")Longitude:Double,
+//		@Field("SitePhotos")SitePhotos:String,@Field("RequestedBy") RequestedBy:String):Observable<CommonResult>
+
+	fun saveSitePosition(@Body siteInfo:SiteInfo):Observable<CommonResult>
 	/**
 	 * 获取站点列表
 	 */
@@ -29,7 +32,7 @@ interface APIService {
 	@FormUrlEncoded
 	@Headers("Content-Type:application/x-www-form-urlencoded; charset=utf-8")
 	fun getBDSiteInfoList(
-		@Field("IsPage") IsPage:String,@Field("CurrentPage") CurrentPage:Int, @Field("PageSize")PageSize:Int):Observable<BDSiteInfoData>
+		@Field("IsPage") IsPage:String,@Field("CurrentPage") CurrentPage:Int, @Field("PageSize")PageSize:Int,@Field("SName")SName:String):Observable<BDSiteInfoData>
 	/**
 	 * 查询历史点位
 	 */

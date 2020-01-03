@@ -16,7 +16,7 @@ public class SortItem extends TreeItem<BDSiteInfoData.ModelData> {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder) {
     	viewHolder.setTag(R.id.item_sort_child_tv,getData());
-		((TextView)viewHolder.getView(R.id.item_sort_child_tv)).setText(getData().getSName());
+		((TextView)viewHolder.getView(R.id.item_sort_child_tv)).setText(getData().getSName()+"("+ getData().getSDirect() +")");
         //设置点击事件
 //        viewHolder.setOnClickListener(R.id.tv_call,getData().getOnClickListener());
     }

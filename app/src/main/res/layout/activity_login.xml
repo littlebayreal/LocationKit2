@@ -2,58 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/main_blue">
-
-    <TextView
-        android:id="@+id/activity_login_txt"
-        android:layout_width="500dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="苏州智能交通测点工具V2.0"
-	    android:fontFamily="sans-serif"
-	    android:textSize="40dp"
-        />
+    android:background="@mipmap/bg">
+   <LinearLayout
+	   android:layout_width="wrap_content"
+	   android:layout_height="wrap_content"
+	   android:layout_alignParentBottom="true"
+	   android:layout_centerHorizontal="true"
+	   android:layout_marginBottom="50dp"
+	   android:orientation="vertical">
+    <ImageView
+	    android:layout_width="match_parent"
+	    android:layout_height="80dp"
+	    android:src="@mipmap/logo_name"
+	    android:layout_above="@id/ll"
+	    android:padding="20dp"
+	    />
+	<LinearLayout
+		android:id="@+id/ll"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:background="@drawable/login_bg"
+		android:padding="20dp">
     <EditText
         android:id="@+id/username"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="@drawable/login_input"
-        android:hint="用户名"
+        android:hint="用户名6-20位数字或字母"
         android:padding="10dp"
         android:singleLine="true"
-        android:layout_below="@id/activity_login_txt"
         android:layout_centerHorizontal="true"
-        android:textSize="18sp" />
+	    android:drawableLeft="@mipmap/user"
+	    android:drawablePadding="5dp"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/login_input"
-        android:hint="密码"
+        android:hint="登录密码6-20位数字或字符"
         android:inputType="textPassword"
+	    android:drawablePadding="5dp"
+	    android:drawableLeft="@mipmap/password"
         android:padding="10dp"
         android:layout_below="@id/username"
         android:singleLine="true"
         android:layout_centerHorizontal="true"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/password"
+	    android:gravity="center"
+	    android:padding="10dp"
+	    android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/btn_login"
-        android:minHeight="0dp"
-        android:padding="10dp"
-        android:text="登录"
-        android:textColor="#000"
-        android:layout_below="@id/password"
-        android:layout_centerHorizontal="true"
-        android:textSize="18sp" />
-
+	    <RadioGroup
+		    android:id="@+id/btn_login_rg"
+		    android:layout_width="match_parent"
+		    android:layout_height="50dp"
+		    android:orientation="horizontal">
+		    <RadioButton
+			    android:id="@+id/btn_login_pad"
+			    android:layout_width="120dp"
+			    android:layout_height="wrap_content"
+			    android:padding="10dp"
+			    android:text="测点"
+			    android:textColor="#1E90FF"
+			    android:buttonTint="#1E90FF"
+			    android:checked="true"
+			    android:textSize="10sp" />
+		    <RadioButton
+			    android:id="@+id/btn_login_phone"
+			    android:layout_width="120dp"
+			    android:layout_height="match_parent"
+			    android:padding="10dp"
+			    android:text="随手拍"
+			    android:layout_marginLeft="10dp"
+			    android:textColor="#1E90FF"
+			    android:buttonTint="#1E90FF"
+			    android:textSize="10sp" />
+	    </RadioGroup>
+    </LinearLayout>
+		<Button
+			android:id="@+id/btn_login"
+			android:layout_width="match_parent"
+			android:background="@drawable/btn_login"
+			android:text="登录"
+			android:textColor="#fff"
+			android:layout_height="50dp"/>
+	</LinearLayout>
+   </LinearLayout>
 </RelativeLayout>

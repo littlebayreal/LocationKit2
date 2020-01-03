@@ -62,9 +62,13 @@ dependencies {
 	api('com.cysion:ImagePicker:1.0.7') {
 		exclude group: 'com.android.support'
 	}
+
+	implementation 'com.carson_ho:SearchLayout:1.0.1'
 	//3D地图so及jar
 	implementation 'com.amap.api:3dmap:latest.integration'
 	//定位功能
 	implementation 'com.amap.api:location:latest.integration'
 	implementation files('libs/pinyin4j-2.5.0.jar')
+//	//北爷的下拉刷新上拉加载库
+	implementation 'com.github.littlebayreal:RefreshAndLoadView:1.0.3'
 }

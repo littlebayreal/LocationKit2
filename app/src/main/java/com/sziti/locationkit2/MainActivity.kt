@@ -1,5 +1,6 @@
 package com.sziti.locationkit2
 
+import android.app.Activity
 import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.content.res.Configuration
@@ -10,7 +11,9 @@ import android.os.PersistableBundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -21,14 +24,16 @@ import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.MyLocationStyle
+import com.example.easyrefreshloadview.base.BGANormalEasyRefreshViewHolder
+import com.example.easyrefreshloadview.base.EasyRefreshLoadView
 import com.lzy.imagepicker.ImagePicker
 import com.lzy.imagepicker.bean.ImageItem
 import com.lzy.imagepicker.ui.ImageGridActivity
 import com.sziti.locationkit2.GlobalObjects.Companion.IMAGE_PICKER
-import com.sziti.locationkit2.GlobalObjects.Companion.LETTERS
-import com.sziti.locationkit2.Pullableview.PullToRefreshLayout
 import com.sziti.locationkit2.data.*
 import com.sziti.locationkit2.http.RetrofitClient
+import com.sziti.locationkit2.refreshlayout.BGANormalRefreshViewHolder
+import com.sziti.locationkit2.refreshlayout.BGARefreshLayout
 import com.sziti.locationkit2.treeRecycleView.SelectImageAdatper
 import com.sziti.locationkit2.treeRecycleView.TreeRecyclerAdapter
 import com.sziti.locationkit2.treeRecycleView.base.*
@@ -38,6 +43,8 @@ import com.sziti.locationkit2.util.TransformLocation
 import com.sziti.locationkit2.util.UploadKit
 import com.sziti.locationkit2.widget.AlertDialog
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.pull_to_refresh_layout
+import kotlinx.android.synthetic.main.activity_stop_search.*
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -51,6 +58,7 @@ import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
+	val REQUEST_CODE = 1234
 	var tv_name: EditText? = null
 	var tv_location: TextView? = null
 	var tv_longitude: TextView? = null
@@ -62,7 +70,7 @@ class MainActivity : AppCompatActivity() {
 	lateinit var showImageAdapter: SelectImageAdatper
 	var showHistoryAdapter: TreeRecyclerAdapter = TreeRecyclerAdapter()
 	var imgList: ArrayList<String> = ArrayList()
-
+    lateinit var refreshLayout:EasyRefreshLoadView
 	lateinit var mMapView: MapView
 	var historylist: ArrayList<HistoryData> = ArrayList()
 	var aMap: AMap? = null
@@ -73,11 +81,14 @@ class MainActivity : AppCompatActivity() {
 	var currentPage = 1
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+		if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			setContentView(R.layout.activity_main)
-		else
+			refreshLayout = findViewById(R.id.pull_to_refresh_layout)
+		}
+		else {
 			setContentView(R.layout.activity_main_portrait)
-
+			refreshLayout = findViewById(R.id.pull_to_refresh_layout_portrait)
+		}
 		if (lastCustomNonConfigurationInstance != null)
 			imgList = lastCustomNonConfigurationInstance as ArrayList<String>
 		//获取地图控件引用
@@ -110,36 +121,7 @@ class MainActivity : AppCompatActivity() {
 				showImageAdapter.notifyItemRemoved(position)
 			}
 		})
-		showHistory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-			override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-				val lm = recyclerView.layoutManager as LinearLayoutManager?
-				val totalItemCount = recyclerView.adapter!!.itemCount
-				val lastVisibleItemPosition = lm!!.findLastVisibleItemPosition()
-				val visibleItemCount = recyclerView.childCount
 
-				if (newState == RecyclerView.SCROLL_STATE_IDLE
-					&& lastVisibleItemPosition == totalItemCount - 1
-					&& visibleItemCount > 0
-				) {
-					//加载更多
-					findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).autoLoad()
-				}
-			}
-		})
-		findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).setOnRefreshListener(object :
-			PullToRefreshLayout.OnRefreshListener {
-			override fun onRefresh(pullToRefreshLayout: PullToRefreshLayout?) {
-				//刷新历史点位列表
-				historylist.clear()
-				currentPage = 1
-				queryHistory(true)
-			}
-
-			override fun onLoadMore(pullToRefreshLayout: PullToRefreshLayout?) {
-				currentPage++
-				queryHistory(false)
-			}
-		})
 		aMap?.setOnMyLocationChangeListener {
 			if (isFirst) {
 				isFirst = false
@@ -155,106 +137,119 @@ class MainActivity : AppCompatActivity() {
 			tv_latitude?.setText("" + df.format(wgs84[1]))
 		}
 		select_stop.setOnClickListener(View.OnClickListener {
+			startActivityForResult(Intent(this@MainActivity,StopSearchActivity::class.java),REQUEST_CODE)
 			//网络请求
-			RetrofitClient.getInstance().getBDSiteInfoList("False", 1, 80)
-				.subscribeOn(Schedulers.io())
-				.map(object : Func1<BDSiteInfoData, List<SortItemGroup>> {
-					override fun call(t: BDSiteInfoData?): List<SortItemGroup> {
-						var temp: ArrayList<LetterData> = ArrayList()
-						if (t!!.Total > 0 && t!!.Model!!.size > 0) {
-							//初始化26个字母的数据
-							for (index in 0..26) {
-								var letterData = LetterData()
-								letterData.letter = GlobalObjects.LETTERS.get(index)
-								var subData = ArrayList<BDSiteInfoData.ModelData>()
-								for (m in t.Model!!) {
-									val py: String
-									if (PinYinUtil.getLowerCase(
-											m.SName, false
-										) != null
-									)
-										py = PinYinUtil.getLowerCase(
-											m.SName, false
-										)
-									else py = "#"
-									//如果是正常的字母并且等于当前循环的字母
-									if (py.substring(0, 1).equals(LETTERS.get(index), true))
-										subData.add(m)
-								}
-								letterData.datas = subData
-								if (letterData.datas.size > 0)
-									temp.add(letterData)
-							}
-							return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
-						}
-						return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
-					}
-				})
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(object:Subscriber<List<SortItemGroup>>(){
-					override fun onNext(it: List<SortItemGroup>?) {
-						var t = TreeRecyclerAdapter(TreeRecyclerType.SHOW_ALL)
-						//点击弹出站点选择dialog
-						var dialog = AlertDialog(this@MainActivity)
-						dialog.builder().setTitle("选择站点名称")
-							.setCancelable(false)
-							.setMsgLayoutManager(
-								LinearLayoutManager(
-									this@MainActivity,
-									LinearLayoutManager.VERTICAL,
-									false
-								)
-							)
-							.setMsgAdapter(t)
-							.setPositiveButton("", View.OnClickListener {
-
-							})
-							.setNegativeButton("取消", View.OnClickListener {
-
-							})
-							.setOnIndexChangedListener {
-								//根据滑动的索引快速定位
-								var sortIndex = 0
-								for (t in t.getDatas()) {
-									if (t is TreeItemGroup) {
-										if ((t.getData() as LetterData).getLetter().equals(it)) {
-											sortIndex = t.getItemManager().getItemPosition(t)
-										}
-									}
-								}
-								(dialog.txt_msg.layoutManager as LinearLayoutManager)?.scrollToPositionWithOffset(
-									sortIndex,
-									0
-								)
-							}
-						dialog.show()
-						t.setDatas(it)
-						t.notifyDataSetChanged()
-						t.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
-							override fun onItemClick(viewHolder: ViewHolder?, position: Int) {
-								if (viewHolder?.getView<TextView>(R.id.item_sort_child_tv) != null) {
-									currentStop =
-										viewHolder.getView<TextView>(R.id.item_sort_child_tv)?.getTag() as BDSiteInfoData.ModelData
-									tv_name?.setText(currentStop?.SName)
-									tv_location_direction?.setText(currentStop?.SDirect)
-									dialog.dismiss()
-								}
-							}
-						})
-					}
-
-					override fun onCompleted() {
-
-					}
-
-					override fun onError(e: Throwable?) {
-						Log.e("vvv",e?.toString())
-					}
-				})
+//			RetrofitClient.getInstance().getBDSiteInfoList("False", 1, 1800)
+//				.subscribeOn(Schedulers.io())
+//				.map(object : Func1<BDSiteInfoData, List<SortItemGroup>> {
+//					override fun call(t: BDSiteInfoData?): List<SortItemGroup> {
+//						var temp: ArrayList<LetterData> = ArrayList()
+//						if (t!!.Total > 0 && t!!.Model!!.size > 0) {
+//							//初始化26个字母的数据
+//							for (index in 0..26) {
+//								var letterData = LetterData()
+//								letterData.letter = GlobalObjects.LETTERS.get(index)
+//								var subData = ArrayList<BDSiteInfoData.ModelData>()
+//								for (m in t.Model!!) {
+//									val py: String
+//									if (PinYinUtil.getLowerCase(
+//											m.SName, false
+//										) != null
+//									)
+//										py = PinYinUtil.getLowerCase(
+//											m.SName, false
+//										)
+//									else py = "#"
+//									//如果是正常的字母并且等于当前循环的字母
+//									if (py.substring(0, 1).equals(LETTERS.get(index), true))
+//										subData.add(m)
+//								}
+//								letterData.datas = subData
+//								if (letterData.datas.size > 0)
+//									temp.add(letterData)
+//							}
+//							return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
+//						}
+//						return ItemHelperFactory.createTreeItemList(temp, SortItemGroup::class.java, null) as List<SortItemGroup>
+//					}
+//				})
+//				.observeOn(AndroidSchedulers.mainThread())
+//				.subscribe(object:Subscriber<List<SortItemGroup>>(){
+//					override fun onNext(it: List<SortItemGroup>?) {
+//						var treeRecyclerAdapter = TreeRecyclerAdapter(TreeRecyclerType.SHOW_ALL)
+//						//点击弹出站点选择dialog
+//						var dialog = AlertDialog(this@MainActivity)
+//						dialog.builder().setTitle("选择站点名称")
+//							.setCancelable(false)
+//							.setMsgLayoutManager(
+//								LinearLayoutManager(
+//									this@MainActivity,
+//									LinearLayoutManager.VERTICAL,
+//									false
+//								)
+//							)
+//							.setMsgAdapter(treeRecyclerAdapter)
+//							.setPositiveButton("", View.OnClickListener {
+//
+//							})
+//							.setNegativeButton("取消", View.OnClickListener {
+//
+//							})
+//							.setOnIndexChangedListener {
+//								//根据滑动的索引快速定位
+//								var sortIndex = 0
+//								for (t in treeRecyclerAdapter.getDatas()) {
+//									if (t is TreeItemGroup) {
+//										if ((t.getData() as LetterData).getLetter().equals(it)) {
+//											sortIndex = treeRecyclerAdapter.getDatas().indexOf(t)
+////											Log.e("jjj","点击的字母:"+ it)
+////											Log.e("jjj","是不是空指针:"+ t.itemManager)
+//
+////											sortIndex = t.getItemManager().getItemPosition(t)
+//										}
+//									}
+//								}
+//								(dialog.txt_msg.layoutManager as LinearLayoutManager)?.scrollToPositionWithOffset(
+//									sortIndex,
+//									0
+//								)
+//							}
+//						dialog.show()
+//						treeRecyclerAdapter.setDatas(it)
+//						treeRecyclerAdapter.notifyDataSetChanged()
+//						treeRecyclerAdapter.setOnItemClickListener(object : BaseRecyclerAdapter.OnItemClickListener {
+//							override fun onItemClick(viewHolder: ViewHolder?, position: Int) {
+//								if (viewHolder?.getView<TextView>(R.id.item_sort_child_tv) != null) {
+//									currentStop =
+//										viewHolder.getView<TextView>(R.id.item_sort_child_tv)?.getTag() as BDSiteInfoData.ModelData
+//									tv_name?.setText(currentStop?.SName)
+//									tv_location_direction?.setText(currentStop?.SDirect)
+//									dialog.dismiss()
+//								}
+//							}
+//						})
+//					}
+//
+//					override fun onCompleted() {
+//
+//					}
+//
+//					override fun onError(e: Throwable?) {
+//						Log.e("vvv",e?.toString())
+//					}
+//				})
 		})
 
 		//保存按钮监听
 		button_save.setOnClickListener(View.OnClickListener {
+			if(TextUtils.isEmpty(tv_name?.text.toString()) || TextUtils.isEmpty(tv_location_direction?.text.toString())){
+				Toast.makeText(this@MainActivity,"保存点位时必须添加站点名称以及站点方位",Toast.LENGTH_SHORT).show()
+				return@OnClickListener
+			}
+			if(imgList.size == 0){
+				Toast.makeText(this@MainActivity,"保存点位时必须添加一张图片",Toast.LENGTH_SHORT).show()
+				return@OnClickListener
+			}
 			Observable.just(imgList)
 				.map(object : Func1<List<String>, List<File>> {
 					override fun call(t: List<String>?): List<File> {
@@ -285,21 +280,34 @@ class MainActivity : AppCompatActivity() {
 						} else {
 							siteId = UUID.randomUUID().toString()
 						}
-						return RetrofitClient.getInstance().saveSitePosition(
-							UUID.randomUUID().toString(),
-							siteId,
-							tv_latitude?.text.toString().toDouble(),
-							tv_longitude?.text.toString().toDouble(),
-							t?.savedFileInfo.toString(),
-							GlobalObjects.Username
-						)
+						currentStop = BDSiteInfoData.ModelData()
+						currentStop?.Guid = siteId
+						currentStop?.SName = tv_name?.text.toString()
+						currentStop?.SDirect = tv_location_direction?.text.toString()
 
+						var s = SiteInfo(UUID.randomUUID().toString(),siteId,tv_name?.text.toString(),tv_location_direction?.text.toString(),
+							tv_latitude?.text.toString().toDouble(),tv_longitude?.text.toString().toDouble(),t?.savedFileInfo.toString(),GlobalObjects.Username)
+//						return RetrofitClient.getInstance().saveSitePosition(
+//							UUID.randomUUID().toString(),
+//							siteId,
+//							tv_name?.text.toString(),
+//							tv_location_direction?.text.toString(),
+//							tv_latitude?.text.toString().toDouble(),
+//							tv_longitude?.text.toString().toDouble(),
+//							t?.savedFileInfo.toString(),
+//							GlobalObjects.Username
+//						)
+                        return RetrofitClient.getInstance().saveSitePosition(s)
 					}
 				})
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(object : Subscriber<CommonResult>() {
 					override fun onNext(t: CommonResult?) {
 						if (t?.code == 0){
+							//刷新站点数据
+							historylist.clear()
+							currentPage = 1
+							queryHistory(true)
 							Toast.makeText(this@MainActivity,"上传成功",Toast.LENGTH_SHORT).show()
 						}else{
 							Toast.makeText(this@MainActivity,"上传失败，请重试",Toast.LENGTH_SHORT).show()
@@ -330,8 +338,10 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	private fun queryHistory(isRefresh: Boolean) {
+		Log.i("xxx","currentStop:"+ currentStop?.SName +"guid:"+currentStop?.Guid)
 		RetrofitClient.getInstance()
 			.querySitePositionRecord(currentStop?.Guid.toString(), true, PAGESIZE, currentPage)
+//			.querySitePositionRecord("e156818e-ce06-442c-9378-91833bce28b2",true,PAGESIZE,currentPage)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(object : Subscriber<QueryPositionRecordResult>() {
@@ -366,11 +376,8 @@ class MainActivity : AppCompatActivity() {
 																Toast.LENGTH_SHORT
 															).show()
 													}
-
 													override fun onCompleted() {
-
 													}
-
 													override fun onError(e: Throwable?) {
 														Log.e("bbb", e?.message)
 													}
@@ -398,27 +405,16 @@ class MainActivity : AppCompatActivity() {
 						showHistoryAdapter.setDatas(list)
 						showHistoryAdapter.notifyDataSetChanged()
 						if (isRefresh) {
-							findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).refreshFinish(
-								PullToRefreshLayout.SUCCEED,
-								"更新数据" + t?.Model?.size + "条"
-							)
+							refreshLayout.endRefreshing("已更新数据"+ list?.size + "条")
 						} else {
 							//进行智能的加载
-							findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).loadmoreFinish(
-								PullToRefreshLayout.SUCCEED
-							)
+							refreshLayout.endLoadingMore()
 						}
 					} else {
 						if (isRefresh) {
-							findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).refreshFinish(
-								PullToRefreshLayout.FAIL,
-								"历史数据查询失败"
-							)
+							refreshLayout.endRefreshing("更新数据失败")
 						} else {
-							//进行智能的加载
-							findViewById<PullToRefreshLayout>(R.id.pull_to_refresh_layout).loadmoreFinish(
-								PullToRefreshLayout.FAIL
-							)
+							refreshLayout.endLoadingMore()
 						}
 					}
 				}
@@ -447,6 +443,33 @@ class MainActivity : AppCompatActivity() {
 
 		showImages = findViewById(R.id.showImages)
 		showHistory = findViewById(R.id.showHistory)
+
+		refreshLayout.setDelegate(object :
+			EasyRefreshLoadView.RefreshAndLoadListener {
+			override fun onRefresh(easyRefreshLoadView: EasyRefreshLoadView?) {
+				//刷新历史点位列表
+				historylist.clear()
+				currentPage = 1
+				queryHistory(true)
+			}
+
+			override fun onLoad(easyRefreshLoadView: EasyRefreshLoadView?) {
+				currentPage++
+				queryHistory(false)
+			}
+		})
+		// 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
+		val refreshViewHolder = BGANormalEasyRefreshViewHolder(MainActivity@this, true,EasyRefreshLoadView.PULL_UP_AUTO)
+		// 设置下拉刷新
+//		refreshViewHolder.setRefreshViewBackgroundColorRes(R.color.color_F3F5F4)//背景色
+//		refreshViewHolder.setPullDownRefreshText(UIUtils.getString(R.string.refresh_pull_down_text))//下拉的提示文字
+//		refreshViewHolder.setReleaseRefreshText(UIUtils.getString(R.string.refresh_release_text))//松开的提示文字
+//		refreshViewHolder.setRefreshingText(UIUtils.getString(R.string.refresh_ing_text))//刷新中的提示文字
+
+//		refreshLayout.setIsShowLoadingMoreView(true)
+		// 设置下拉刷新和上拉加载更多的风格
+		refreshLayout.setRefreshViewHolder(refreshViewHolder)
+		refreshLayout.shouldHandleRecyclerViewLoadingMore(showHistory)
 	}
 
 	private fun initMapView() {
@@ -470,6 +493,7 @@ class MainActivity : AppCompatActivity() {
 	override fun onResume() {
 		super.onResume()
 		mMapView.onResume()
+		initMapView()
 	}
 	//根据高德地图的特性，需要完整的走过一遍activity的生命周期  所以不能使用这种不销毁的方式
 //	override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -516,6 +540,20 @@ class MainActivity : AppCompatActivity() {
 			} else {
 				Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show()
 			}
+		}
+		if (resultCode === Activity.RESULT_OK && requestCode === REQUEST_CODE){
+			Log.i("zzz",currentStop?.SName + currentStop?.Guid)
+			currentStop = data?.getSerializableExtra("current_stop") as BDSiteInfoData.ModelData
+			tv_name?.setText(currentStop?.SName)
+			tv_location_direction?.setText(currentStop?.SDirect)
+			//清除图片选择记录
+			imgList.clear()
+			showImageAdapter.notifyDataSetChanged()
+
+			//刷新站点数据
+			historylist.clear()
+			currentPage = 1
+            queryHistory(true)
 		}
 	}
 }

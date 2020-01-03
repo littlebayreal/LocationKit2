@@ -145,19 +145,15 @@
 			android:layout_gravity="center"
 			android:text="保存" />
 		<include layout="@layout/item_history_header" />
-		<com.sziti.locationkit2.Pullableview.PullToRefreshLayout
+		<com.example.easyrefreshloadview.base.EasyRefreshLoadView
 			android:id="@+id/pull_to_refresh_layout"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1">
-			<include layout="@layout/refresh_head" />
-			<include layout="@layout/refresh_head_show"/>
-			<com.sziti.locationkit2.Pullableview.PullableRecyclerView
+			android:layout_height="match_parent">
+			<android.support.v7.widget.RecyclerView
 				android:id="@+id/showHistory"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-			<include layout="@layout/load_more" />
-		</com.sziti.locationkit2.Pullableview.PullToRefreshLayout>
+				android:layout_height="match_parent"/>
+		</com.example.easyrefreshloadview.base.EasyRefreshLoadView>
 	</LinearLayout>
 
 	<com.amap.api.maps.MapView
